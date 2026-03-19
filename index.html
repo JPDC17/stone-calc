@@ -325,6 +325,67 @@ footer {
     <svg id="diagram" viewBox="0 0 300 220" width="100%" xmlns="http://www.w3.org/2000/svg"></svg>
   </div>
 
+  <!-- DIVIDER -->
+  <div style="border-top: 3px solid #ffd000; margin: 24px 0 4px;"></div>
+  <div style="font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: #ffd000; margin-bottom: 4px;">Area Stone Calculator</div>
+  <div style="font-size: 11px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 16px;">For pads, beds &amp; surface areas</div>
+
+  <div class="section-title">Inputs</div>
+  <div class="card">
+    <div class="input-group">
+      <label>Total Area</label>
+      <div class="input-wrap">
+        <input type="number" id="area" value="" min="0" step="1" inputmode="decimal" placeholder="0">
+        <div class="unit">m²</div>
+      </div>
+    </div>
+    <div class="input-group">
+      <label>Depth of Stone</label>
+      <div class="input-wrap">
+        <input type="number" id="area-depth" value="" min="0" step="10" inputmode="decimal" placeholder="0">
+        <div class="unit">mm</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">Result</div>
+  <div class="key-grid">
+    <div class="key-card tpm">
+      <div class="kl">Volume</div>
+      <div class="kv" id="area-vol">0.00</div>
+      <div class="ku">m³</div>
+    </div>
+    <div class="key-card tot">
+      <div class="kl">Total Tonnes</div>
+      <div class="kv" id="area-total">0.00</div>
+      <div class="ku">tonnes</div>
+    </div>
+  </div>
+
+  <div class="section-title">Breakdown</div>
+  <div class="card">
+    <div class="row">
+      <div class="lbl">Area</div>
+      <div class="val"><span id="ar-area">0.00</span><span>m²</span></div>
+    </div>
+    <div class="row">
+      <div class="lbl">Depth</div>
+      <div class="val"><span id="ar-depth">0.000</span><span>m</span></div>
+    </div>
+    <div class="row">
+      <div class="lbl">Volume</div>
+      <div class="val"><span id="ar-vol">0.00</span><span>m³</span></div>
+    </div>
+    <div class="row">
+      <div class="lbl">Density</div>
+      <div class="val"><span>2.2</span><span>t/m³</span></div>
+    </div>
+    <div class="row">
+      <div class="lbl">Total Tonnes</div>
+      <div class="val"><span id="ar-total">0.00</span><span>t</span></div>
+    </div>
+  </div>
+
 </main>
 
 <footer>Site Use Only &mdash; Verify with engineer for design depths</footer>
@@ -458,11 +519,26 @@ function mkText(svg, x, y, text, fill, size, anchor) {
   svg.appendChild(el);
 }
 
+function calcArea() {
+  var A = parseFloat(document.getElementById('area').value)       || 0;
+  var D = parseFloat(document.getElementById('area-depth').value) || 0;
+  var depthM = D / 1000;
+  var vol    = A * depthM;
+  var total  = vol * 2.2;
+  document.getElementById('area-vol').textContent   = vol.toFixed(2);
+  document.getElementById('area-total').textContent = total.toFixed(2);
+  document.getElementById('ar-area').textContent    = A.toFixed(2);
+  document.getElementById('ar-depth').textContent   = depthM.toFixed(3);
+  document.getElementById('ar-vol').textContent     = vol.toFixed(2);
+  document.getElementById('ar-total').textContent   = total.toFixed(2);
+}
+
 var inputs = document.querySelectorAll('input');
 for (var i = 0; i < inputs.length; i++) {
-  inputs[i].addEventListener('input', calc);
+  inputs[i].addEventListener('input', function() { calc(); calcArea(); });
 }
 calc();
+calcArea();
 </script>
 </body>
 </html>
